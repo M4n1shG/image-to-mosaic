@@ -25,7 +25,7 @@ export type {
   DelayCalculator,
 } from './types';
 
-// Pattern utilities (v1: grid, brick, diamond, strips, voronoi)
+// Pattern utilities (v1: grid, brick, diamond, strips, voronoi, puzzle)
 export {
   getPattern,
   getPatternNames,
@@ -36,6 +36,7 @@ export {
   DiamondPattern,
   StripsPattern,
   VoronoiPattern,
+  PuzzlePattern,
 } from './patterns';
 
 // Animation utilities

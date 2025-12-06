@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UMD Build Test - Multiple Instances</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+      background: #1a1a1a;
+      color: white;
+    }
+    h1 { margin-bottom: 20px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 1200px;
+    }
+    .mosaic-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mosaic-wrapper h3 {
+      margin: 0;
+      font-size: 14px;
+      color: #888;
+    }
+    .container {
+      width: 100%;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Multi-Instance Test</h1>
+
+  <div class="grid">
+    <div class="mosaic-wrapper">
+      <h3>Grid Pattern + Fade + Lift</h3>
+      <div id="container1" class="container"></div>
+    </div>
+
+    <div class="mosaic-wrapper">
+      <h3>Brick Pattern + Scale + Glow</h3>
+      <div id="container2" class="container"></div>
+    </div>
+
+    <div class="mosaic-wrapper">
+      <h3>Diamond Pattern + Flip + Zoom</h3>
+      <div id="container3" class="container"></div>
+    </div>
+
+    <div class="mosaic-wrapper">
+      <h3>Voronoi Pattern + Scatter + Tilt</h3>
+      <div id="container4" class="container"></div>
+    </div>
+  </div>
+
+  <script src="./dist/image-to-mosaic.umd.js"></script>
+  <script>
+    // Instance 1: Grid + Fade + Lift
+    const mosaic1 = new ImageToMosaic.Mosaic({
+      target: '#container1',
+      image: 'https://picsum.photos/600/400?random=1',
+      pattern: 'grid',
+      density: 25,
+      gap: 3,
+      borderRadius: 4,
+      animation: {
+        type: 'fade',
+        delay: 'sequential',
+        duration: 500,
+      },
+      hover: { effect: 'lift' },
+      onReady: () => console.log('Mosaic 1 ready!'),
+    });
+
+    // Instance 2: Brick + Scale + Glow
+    const mosaic2 = new ImageToMosaic.Mosaic({
+      target: '#container2',
+      image: 'https://picsum.photos/600/400?random=2',
+      pattern: 'brick',
+      density: 30,
+      gap: 4,
+      borderRadius: 6,
+      animation: {
+        type: 'scale',
+        delay: 'center',
+        duration: 600,
+      },
+      hover: { effect: 'glow' },
+      onReady: () => console.log('Mosaic 2 ready!'),
+    });
+
+    // Instance 3: Diamond + Flip + Zoom
+    const mosaic3 = new ImageToMosaic.Mosaic({
+      target: '#container3',
+      image: 'https://picsum.photos/600/400?random=3',
+      pattern: 'diamond',
+      density: 20,
+      gap: 2,
+      animation: {
+        type: 'flip',
+        delay: 'random',
+        duration: 700,
+      },
+      hover: { effect: 'zoom', scale: 1.15 },
+      onReady: () => console.log('Mosaic 3 ready!'),
+    });
+
+    // Instance 4: Voronoi + Scatter + Tilt
+    const mosaic4 = new ImageToMosaic.Mosaic({
+      target: '#container4',
+      image: 'https://picsum.photos/600/400?random=4',
+      pattern: 'voronoi',
+      density: 15,
+      gap: 3,
+      animation: {
+        type: 'scatter',
+        delay: 'spiral',
+        duration: 800,
+      },
+      hover: { effect: 'tilt' },
+      onReady: () => console.log('Mosaic 4 ready!'),
+    });
+
+    // Render all instances
+    Promise.all([
+      mosaic1.render(),
+      mosaic2.render(),
+      mosaic3.render(),
+      mosaic4.render(),
+    ]).then(() => {
+      console.log('All mosaics rendered!');
+    });
+  </script>
+</body>
+</html>

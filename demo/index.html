@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image to Mosaic - JavaScript Library for Mosaic Tile Effects</title>
+  <meta name="description" content="A zero-dependency JavaScript library that transforms images into interactive mosaic tiles with customizable patterns, animations, and hover effects.">
+  <meta name="keywords" content="mosaic, image, javascript, library, tiles, animation, effects, web component">
+  <meta name="author" content="M-Verse">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Image to Mosaic - JavaScript Library">
+  <meta property="og:description" content="Transform images into interactive mosaic tiles with customizable patterns, animations, and hover effects. Zero dependencies.">
+  <meta property="og:url" content="https://m-verse.com/playground/image-to-mosaic">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Image to Mosaic - JavaScript Library">
+  <meta name="twitter:description" content="Transform images into interactive mosaic tiles with customizable patterns, animations, and hover effects.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+  <!-- Dotted canvas background -->
+  <div class="canvas-bg"></div>
+
+  <!-- Top Left: Title -->
+  <div class="panel-topleft">
+    <div class="title-group">
+      <span class="page-title">Image to Mosaic</span>
+      <span class="version-badge">1.0</span>
+    </div>
+  </div>
+
+  <!-- Top Center: Tab Panel -->
+  <div class="panel-topcenter">
+    <div class="tab-panel" id="view-tabs">
+      <button class="tab-btn active" data-view="playground">Playground</button>
+      <button class="tab-btn" data-view="gallery">Gallery</button>
+    </div>
+  </div>
+
+  <!-- Bottom Left: Theme Toggle + Zoom Controls -->
+  <div class="panel-bottomleft">
+    <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+      <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+    <div class="zoom-panel">
+      <button class="zoom-btn" id="zoom-out" aria-label="Zoom out">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+      <span class="zoom-value" id="zoom-value">100%</span>
+      <button class="zoom-btn" id="zoom-in" aria-label="Zoom in">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+      <button class="zoom-btn" id="zoom-fit" aria-label="Fit to screen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Canvas Area -->
+  <main class="canvas-area" id="canvas-area">
+    <!-- Playground View (single mosaic) -->
+    <div id="mosaic-wrapper" class="view-content active" data-view="playground">
+      <div id="mosaic-container"></div>
+    </div>
+
+    <!-- Gallery View (multi-instance showcase) -->
+    <div id="gallery-wrapper" class="view-content" data-view="gallery">
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <div class="gallery-label">Grid + Fade + Lift</div>
+          <div id="gallery-1" class="gallery-container"></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-label">Brick + Scale + Spotlight</div>
+          <div id="gallery-2" class="gallery-container"></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-label">Diamond + Flip + Flip</div>
+          <div id="gallery-3" class="gallery-container"></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-label">Voronoi + Scatter + Tilt</div>
+          <div id="gallery-4" class="gallery-container"></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-label">Strips + Slide + Blur</div>
+          <div id="gallery-5" class="gallery-container"></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-label">Grid + Scatter + Pop</div>
+          <div id="gallery-6" class="gallery-container"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Right Side: Collapsible Panels -->
+  <aside class="panels-right">
+    <!-- Image Panel -->
+    <div class="collapsible-panel" data-panel="image">
+      <button class="panel-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+          <polyline points="21 15 16 10 5 21"></polyline>
+        </svg>
+        <span>Image</span>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="panel-content">
+        <div class="control-group">
+          <label class="control-label">Source</label>
+          <select id="image-select" class="control-select">
+            <option value="landscape">Landscape (4:3)</option>
+            <option value="portrait">Portrait (3:4)</option>
+            <option value="square">Square (1:1)</option>
+            <option value="wide">Wide (2:1)</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Custom URL</label>
+          <div class="flex gap-2">
+            <input type="text" id="image-url" class="control-input" placeholder="https://...">
+            <button id="load-image" class="btn btn-sm">Load</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pattern Panel -->
+    <div class="collapsible-panel" data-panel="pattern">
+      <button class="panel-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Pattern</span>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="panel-content">
+        <select id="pattern-select" class="control-select">
+          <option value="grid">Grid</option>
+          <option value="brick">Brick</option>
+          <option value="diamond">Diamond</option>
+          <option value="strips">Strips</option>
+          <option value="voronoi">Voronoi</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Tiles Panel -->
+    <div class="collapsible-panel" data-panel="tiles">
+      <button class="panel-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        <span>Tiles</span>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="panel-content">
+        <div class="control-group">
+          <label class="control-label">
+            Density
+            <span class="control-value" id="density-value">4</span>
+          </label>
+          <input type="range" id="density-slider" class="control-slider" min="1" max="100" value="4">
+        </div>
+        <div class="control-group">
+          <label class="control-label">
+            Gap
+            <span class="control-value"><span id="gap-value">5</span>px</span>
+          </label>
+          <input type="range" id="gap-slider" class="control-slider" min="0" max="20" value="5">
+        </div>
+        <div class="control-group">
+          <label class="control-label">
+            Radius
+            <span class="control-value"><span id="radius-value">5</span>px</span>
+          </label>
+          <input type="range" id="radius-slider" class="control-slider" min="0" max="50" value="5">
+        </div>
+      </div>
+    </div>
+
+    <!-- Animation Panel -->
+    <div class="collapsible-panel" data-panel="animation">
+      <button class="panel-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span>Entrance</span>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="panel-content">
+        <div class="control-group">
+          <label class="control-label">Type</label>
+          <select id="animation-select" class="control-select">
+            <option value="none">None</option>
+            <option value="fade" selected>Fade</option>
+            <option value="scale">Scale</option>
+            <option value="flip">Flip</option>
+            <option value="slide">Slide</option>
+            <option value="scatter">Scatter</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Delay</label>
+          <select id="delay-select" class="control-select">
+            <option value="sequential" selected>Sequential</option>
+            <option value="random">Random</option>
+            <option value="center">Center</option>
+            <option value="spiral">Spiral</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label class="control-label">
+            Duration
+            <span class="control-value"><span id="duration-value">500</span>ms</span>
+          </label>
+          <input type="range" id="duration-slider" class="control-slider" min="100" max="2000" value="500" step="100">
+        </div>
+        <div class="control-group">
+          <label class="control-label">Easing</label>
+          <select id="easing-select" class="control-select">
+            <option value="ease-out" selected>Ease Out</option>
+            <option value="ease-in">Ease In</option>
+            <option value="ease-in-out">Ease In-Out</option>
+            <option value="ease">Ease</option>
+            <option value="linear">Linear</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hover Panel -->
+    <div class="collapsible-panel" data-panel="hover">
+      <button class="panel-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        <span>Hover</span>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="panel-content">
+        <div class="control-group">
+          <label class="control-label">Effect</label>
+          <select id="hover-select" class="control-select">
+            <option value="none">None</option>
+            <option value="lift" selected>Lift</option>
+            <option value="glow">Glow</option>
+            <option value="zoom">Zoom</option>
+            <option value="tilt">Tilt</option>
+            <option value="flip">Flip</option>
+            <option value="blur">Blur</option>
+            <option value="pop">Pop</option>
+            <option value="spotlight">Spotlight</option>
+          </select>
+        </div>
+        <div class="control-group" id="glow-color-group" style="display: none;">
+          <label class="control-label">Glow Color</label>
+          <input type="color" id="glow-color" class="control-color" value="#ffffff">
+        </div>
+        <div class="control-group">
+          <label class="control-label">
+            Scale
+            <span class="control-value"><span id="hover-scale-value">1.08</span>x</span>
+          </label>
+          <input type="range" id="hover-scale-slider" class="control-slider" min="0.9" max="1.5" value="1.08" step="0.02">
+        </div>
+        <div class="control-group">
+          <label class="control-label">
+            Speed
+            <span class="control-value"><span id="hover-duration-value">200</span>ms</span>
+          </label>
+          <input type="range" id="hover-duration-slider" class="control-slider" min="50" max="500" value="200" step="50">
+        </div>
+      </div>
+    </div>
+
+    <!-- Options Panel -->
+    <div class="collapsible-panel" data-panel="options">
+      <button class="panel-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Options</span>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="panel-content">
+        <div class="toggle-row">
+          <label class="control-label">Draggable</label>
+          <label class="control-toggle">
+            <input type="checkbox" id="draggable-check">
+            <span class="control-toggle-track"></span>
+          </label>
+        </div>
+        <div class="toggle-row" style="margin-top: var(--space-2);">
+          <label class="control-label">Start Shuffled</label>
+          <label class="control-toggle">
+            <input type="checkbox" id="shuffle-check">
+            <span class="control-toggle-track"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Panel -->
+    <div class="collapsible-panel" data-panel="actions">
+      <button class="panel-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span>Actions</span>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="panel-content">
+        <div class="btn-group">
+          <button id="shuffle-btn" class="btn btn-sm">Shuffle</button>
+          <button id="reset-btn" class="btn btn-sm">Reset</button>
+        </div>
+        <button id="render-btn" class="btn btn-sm btn-primary btn-full" style="margin-top: var(--space-2);">Re-render</button>
+      </div>
+    </div>
+
+    <!-- Code Panel -->
+    <div class="collapsible-panel" data-panel="code">
+      <button class="panel-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <span>Code</span>
+        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="panel-content">
+        <pre class="code-block" id="code-output"></pre>
+        <button id="copy-code" class="btn btn-sm btn-full">Copy</button>
+      </div>
+    </div>
+
+    <!-- Instructions Panel -->
+    <div class="collapsible-panel instructions-panel" data-panel="instructions">
+      <button class="panel-toggle" id="instructions-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <span>Use in Your App</span>
+        <svg class="chevron-right" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Instructions Modal -->
+  <div class="modal-overlay" id="instructions-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Use Image to Mosaic in Your App</h2>
+        <button class="modal-close" id="modal-close" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <section class="modal-section">
+          <h3>Installation</h3>
+          <pre class="code-block">npm install image-to-mosaic</pre>
+        </section>
+
+        <section class="modal-section">
+          <h3>Basic Usage</h3>
+          <pre class="code-block">import { Mosaic } from 'image-to-mosaic';
+
+const mosaic = new Mosaic({
+  target: '#container',
+  image: 'path/to/image.jpg',
+  pattern: 'grid',
+  density: 4,
+  animation: {
+    type: 'fade',
+    duration: 500,
+  },
+});
+
+mosaic.render();</pre>
+        </section>
+
+        <section class="modal-section">
+          <h3>Available Options</h3>
+          <ul class="options-list">
+            <li><strong>pattern:</strong> grid, brick, diamond, strips, voronoi</li>
+            <li><strong>animation:</strong> fade, scale, flip, slide, scatter</li>
+            <li><strong>delay:</strong> sequential, random, center, spiral</li>
+            <li><strong>hover:</strong> lift, glow, zoom, tilt, flip, blur, pop, spotlight</li>
+          </ul>
+        </section>
+
+        <section class="modal-section">
+          <h3>Links</h3>
+          <div class="modal-links">
+            <a href="https://github.com/M4n1shG/image-to-mosaic" target="_blank" rel="noopener" class="modal-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              GitHub Repository
+            </a>
+            <a href="https://www.npmjs.com/package/image-to-mosaic" target="_blank" rel="noopener" class="modal-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M0 7.334v8h6.666v1.332H12v-1.332h12v-8H0zm6.666 6.664H5.334v-4H3.999v4H1.335V8.667h5.331v5.331zm4 0v1.336H8.001V8.667h5.334v5.332h-2.669v-.001zm12.001 0h-1.33v-4h-1.336v4h-1.335v-4h-1.33v4h-2.671V8.667h8.002v5.331zM10.665 10H12v2.667h-1.335V10z"/>
+              </svg>
+              NPM Package
+            </a>
+            <a href="https://github.com/M4n1shG/image-to-mosaic#readme" target="_blank" rel="noopener" class="modal-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+              Documentation
+            </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Right: Branding -->
+  <a href="https://m-verse.com/playground" target="_blank" rel="noopener" class="branding-link">
+    An M-Verse Playground Experiment
+  </a>
+
+  <script type="module" src="demo.js"></script>
+</body>
+</html>

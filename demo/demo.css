@@ -1,0 +1,215 @@
+/**
+ * image-to-mosaic Demo - Specific Styles
+ */
+
+/* ========== TITLE GROUP ========== */
+.panel-topleft {
+  height: 32px;
+}
+
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+}
+
+.page-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--text-secondary);
+  letter-spacing: -0.02em;
+}
+
+.version-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 5px;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-panel);
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+}
+
+/* ========== TOP CENTER PANEL ========== */
+.panel-topcenter {
+  position: fixed;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+/* ========== TAB PANEL ========== */
+.tab-panel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
+}
+
+.tab-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-input);
+}
+
+.tab-btn.active {
+  color: var(--text-primary);
+  background: var(--bg-input-hover);
+}
+
+/* ========== VIEW CONTENT ========== */
+.view-content {
+  display: none;
+  transform-origin: center center;
+}
+
+.view-content.active {
+  display: block;
+}
+
+/* Hide right panels when gallery is active */
+body.gallery-view .panels-right {
+  display: none;
+}
+
+/* ========== GALLERY VIEW ========== */
+#gallery-wrapper {
+  transform-origin: center center;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 20px;
+  width: 1200px;
+}
+
+.gallery-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gallery-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.gallery-container {
+  width: 100%;
+  height: 250px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* ========== ORIGINAL STYLES ========== */
+
+/* Canvas area - full viewport, panels float on top */
+.canvas-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Mosaic wrapper - scaled container */
+#mosaic-wrapper {
+  transform-origin: center center;
+}
+
+/* Canvas area cursor */
+.canvas-area {
+  cursor: grab;
+}
+
+.canvas-area:active {
+  cursor: grabbing;
+}
+
+#mosaic-container {
+  /* Dimensions set dynamically by JS based on image type */
+  max-width: calc(100vw - 300px);
+  max-height: calc(100vh - 100px);
+}
+
+/* Make mosaic-container fill wrapper */
+.mosaic-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Code output styling */
+#code-output {
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .canvas-area {
+    padding-right: var(--space-4);
+    padding-bottom: 50vh;
+  }
+
+  .panels-right {
+    top: auto;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    right: var(--space-4);
+    width: auto;
+    max-height: 45vh;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    overflow-y: auto;
+  }
+
+  .panels-right .collapsible-panel {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 140px;
+  }
+
+  #mosaic-container {
+    max-width: 100%;
+    max-height: calc(50vh - 60px);
+  }
+}
+
+@media (max-width: 600px) {
+  .panels-right .collapsible-panel {
+    flex: 1 1 100%;
+  }
+}

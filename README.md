@@ -6,7 +6,7 @@
 
 A zero-dependency JavaScript/TypeScript library that transforms images into interactive mosaic tiles with customizable patterns, animations, and effects.
 
-[**Live Demo**](https://m4n1shg.github.io/image-to-mosaic/demo/)
+[**Live Demo**](https://m4n1shg.github.io/image-to-mosaic/)
 
 ## Features
 

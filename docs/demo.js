@@ -1,4 +1,4 @@
-import { Mosaic } from '../src/index.ts';
+import { Mosaic } from './image-to-mosaic.es.js';
 
 // DOM Elements
 const container = document.getElementById('mosaic-container');

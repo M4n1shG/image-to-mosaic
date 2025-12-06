@@ -221,7 +221,7 @@ export class VoronoiPattern extends BasePattern {
       top: `${tile.y}px`,
       width: `${tile.width}px`,
       height: `${tile.height}px`,
-      'background-image': `url(${imageUrl})`,
+      'background-image': `url('${this.sanitizeUrl(imageUrl)}')`,
       'background-size': `${this.containerWidth}px ${this.containerHeight}px`,
       'background-position': `-${tile.x}px -${tile.y}px`,
       'background-repeat': 'no-repeat',

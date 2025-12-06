@@ -6,7 +6,8 @@ export type PatternType =
   | 'brick'
   | 'diamond'
   | 'strips'
-  | 'voronoi';
+  | 'voronoi'
+  | 'puzzle';
 
 /**
  * Supported animation types

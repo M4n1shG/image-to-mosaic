@@ -318,12 +318,18 @@ export class Mosaic {
   private async renderTiles(cols: number, rows: number): Promise<void> {
     if (!this.container) return;
 
+    // Use DocumentFragment for batched DOM insertion (better performance)
+    const fragment = document.createDocumentFragment();
+
     // Create all tile elements with initial (hidden) state
     for (const tile of this.tiles) {
       const element = this.createTileElement(tile, cols, rows);
       tile.element = element;
-      this.container.appendChild(element);
+      fragment.appendChild(element);
     }
+
+    // Single DOM insertion for all tiles
+    this.container.appendChild(fragment);
 
     // Wait for next frame to ensure elements are in DOM
     await nextFrame();
@@ -429,6 +435,11 @@ export class Mosaic {
    * Setup resize observer for responsive behavior
    */
   private setupResizeObserver(): void {
+    // Feature detection: ResizeObserver not available in older browsers (IE11, Safari <13.1)
+    if (typeof ResizeObserver === 'undefined') {
+      return; // Graceful fallback - no auto-resize on unsupported browsers
+    }
+
     const debouncedResize = debounce(() => {
       // Check if size actually changed to prevent render loops
       const currentSize = getElementDimensions(this.config.target);

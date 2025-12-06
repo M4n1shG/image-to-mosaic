@@ -10,7 +10,7 @@ A zero-dependency JavaScript/TypeScript library that transforms images into inte
 
 ## Features
 
-- **5 Mosaic Patterns**: grid, brick, diamond, strips, voronoi
+- **6 Mosaic Patterns**: grid, brick, diamond, strips, voronoi, puzzle
 - **5 Animation Types**: fade, scale, flip, slide, scatter
 - **4 Delay Modes**: sequential, random, center, spiral
 - **8 Hover Effects**: lift, glow, zoom, tilt, flip, blur, pop, spotlight
@@ -119,7 +119,7 @@ mosaic.render();
 |--------|------|---------|-------------|
 | `target` | string \| HTMLElement | required | Container element or selector |
 | `image` | string | required | Image URL |
-| `pattern` | string | 'grid' | Pattern type: grid, brick, diamond, strips, voronoi |
+| `pattern` | string | 'grid' | Pattern type: grid, brick, diamond, strips, voronoi, puzzle |
 | `density` | number | 50 | Tile density (1-100) |
 | `gap` | number | 2 | Gap between tiles in pixels |
 | `borderRadius` | number \| string | 0 | Border radius for tiles |

@@ -4,10 +4,11 @@ import { BrickPattern } from './brick';
 import { DiamondPattern } from './diamond';
 import { StripsPattern } from './strips';
 import { VoronoiPattern } from './voronoi';
+import { PuzzlePattern } from './puzzle';
 
 /**
  * Pattern registry - maps pattern names to pattern instances
- * V1 Patterns: grid, brick, diamond, strips, voronoi
+ * V1 Patterns: grid, brick, diamond, strips, voronoi, puzzle
  */
 const patterns: Map<PatternType, Pattern> = new Map([
   ['grid', new GridPattern()],
@@ -15,6 +16,7 @@ const patterns: Map<PatternType, Pattern> = new Map([
   ['diamond', new DiamondPattern()],
   ['strips', new StripsPattern()],
   ['voronoi', new VoronoiPattern()],
+  ['puzzle', new PuzzlePattern()],
 ]);
 
 /**
@@ -50,3 +52,4 @@ export { BrickPattern } from './brick';
 export { DiamondPattern } from './diamond';
 export { StripsPattern } from './strips';
 export { VoronoiPattern } from './voronoi';
+export { PuzzlePattern } from './puzzle';
